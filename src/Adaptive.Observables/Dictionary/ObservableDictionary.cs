@@ -25,6 +25,7 @@ namespace Adaptive.Observables
         private readonly Observer _observer;
         private readonly object _lock = new object();
 
+        // todo mutable state to be replaced with a state machine, obs dict made lock free over a concurrent dictionary.
         private bool _isConnected = false;
         private Exception _error;
         private bool _isCompleted;

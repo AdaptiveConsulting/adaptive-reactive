@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reactive;s
+using System.Reactive;
 
 namespace Adaptive.Observables
 {
