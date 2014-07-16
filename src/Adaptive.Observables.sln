@@ -1,9 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adaptive.Observables", "Adaptive.Observables.csproj", "{E1CDFC6E-54D5-4CD9-914C-D0325921C63A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adaptive.Observables", "Adaptive.Observables\Adaptive.Observables.csproj", "{E1CDFC6E-54D5-4CD9-914C-D0325921C63A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adaptive.Observables.Tests", "..\Adaptive.Observables.Tests\Adaptive.Observables.Tests.csproj", "{4C4C638D-614F-4D5A-A20A-F90525E77D81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adaptive.Observables.Tests", "Adaptive.Observables.Tests\Adaptive.Observables.Tests.csproj", "{4C4C638D-614F-4D5A-A20A-F90525E77D81}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8FB618C8-8737-4937-AD3A-BAEF00A009AF}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
