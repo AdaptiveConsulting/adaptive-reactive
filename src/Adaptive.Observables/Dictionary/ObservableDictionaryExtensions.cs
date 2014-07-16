@@ -90,7 +90,7 @@ namespace Adaptive.Observables
         public static IObservable<DictionaryNotification<TKey, TValue>>  Only<TKey, TValue>(
             this IObservable<DictionaryNotification<TKey, TValue>> source, params DictionaryNotificationType[] filter)
         {
-            return source.Where(dn => filter.Contains(dn.Type));
+            return source.Where(dn => filter.Any(filteredDnt => (dn.Type & filteredDnt) > 0));
         } 
     }
 }

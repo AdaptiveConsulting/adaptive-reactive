@@ -59,7 +59,7 @@ namespace Adaptive.Observables.Tests.Samples
             // arrange
             var observations = new List<Update>();
             _observableDictionary.Get(key)
-                .Only(DictionaryNotificationType.Inserted, DictionaryNotificationType.Updated) // ignore meta notifications
+                .Only(DictionaryNotificationType.Values) // ignore meta notifications
                 .Select(dn => dn.Value) // select out the new value in the dictionary
                 .Subscribe(observations.Add);
 
@@ -89,7 +89,7 @@ namespace Adaptive.Observables.Tests.Samples
             // arrange
             var observations = new List<Update>();
             _observableDictionary.Get(key)
-                .Only(DictionaryNotificationType.Inserted, DictionaryNotificationType.Existing, DictionaryNotificationType.Updated) // ignore meta notifications
+                .Only(DictionaryNotificationType.Values) // ignore meta notifications
                 .Select(dn =>
                     dn.Type == DictionaryNotificationType.Inserted
                     ? dn.Value
@@ -117,7 +117,7 @@ namespace Adaptive.Observables.Tests.Samples
             // arrange
             var firstObservations = new List<Update>();
             _observableDictionary.Get(key)
-                .Only(DictionaryNotificationType.Inserted, DictionaryNotificationType.Existing, DictionaryNotificationType.Updated) // ignore meta notifications
+                .Only(DictionaryNotificationType.Values) // ignore meta notifications
                 .Select(dn =>
                     dn.Type == DictionaryNotificationType.Inserted
                     ? dn.Value
@@ -132,7 +132,7 @@ namespace Adaptive.Observables.Tests.Samples
             
             var secondObservations = new List<Update>();
             _observableDictionary.Get(key)
-                .Only(DictionaryNotificationType.Inserted, DictionaryNotificationType.Existing, DictionaryNotificationType.Updated) // ignore meta notifications
+                .Only(DictionaryNotificationType.Values) // ignore meta notifications
                 .Select(dn =>
                     dn.Type == DictionaryNotificationType.Updated
                     ? dn.UpdatingValue
