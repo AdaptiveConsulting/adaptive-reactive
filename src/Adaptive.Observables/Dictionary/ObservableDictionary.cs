@@ -122,7 +122,9 @@ namespace Adaptive.Observables
                     {
                         observer.OnNext(DictionaryNotification.Missing<TKey, TValue>(key));
                     }
-                    return new CompositeDisposable(_subject.Subscribe(observer), Connect());
+                    return new CompositeDisposable(_subject
+                        .Where(dn => dn.Type == DictionaryNotificationType.Cleared || dn.Key.Equals(key))
+                        .Subscribe(observer), Connect());
                 }
             });
         }
