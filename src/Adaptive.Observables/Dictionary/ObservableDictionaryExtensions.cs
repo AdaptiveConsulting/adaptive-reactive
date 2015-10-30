@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Security.Cryptography;
 
 namespace Adaptive.Observables
 {
@@ -34,33 +33,36 @@ namespace Adaptive.Observables
         public static IObservable<DictionaryNotification<TKey, TValue>> CompleteOnCleared<TKey, TValue>(
             this IObservable<DictionaryNotification<TKey, TValue>> source)
         {
-            return source.CompleteOn(DictionaryNotificationType.Cleared);
+            return source.CompleteOn(DictionaryNotificationType.KeyCleared);
         }
 
         public static IObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(
-            this IObservable<DictionaryModification<TKey, TValue>> source)
+            this IObservable<DictionaryModification<TKey, TValue>> source, IScheduler scheduler)
         {
-            return new ObservableDictionary<TKey, TValue>(source, (key, existing, @new) => @new); // TODO Check correct order.
+            return new ObservableDictionary<TKey, TValue>(source, (key, existing, @new) => @new, scheduler);
         }
 
         public static IObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(
-            this IObservable<DictionaryModification<TKey, TValue>> source, Func<TKey, TValue, TValue, TValue> updateFunction)
+            this IObservable<DictionaryModification<TKey, TValue>> source, UpdateFunction<TKey, TValue> updateFunction,
+            IScheduler scheduler)
         {
-            return new ObservableDictionary<TKey, TValue>(source, updateFunction); // TODO Check correct order.
-        }
-
-        public static IObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(
-            this IObservable<DictionaryModification<TKey, TValue>> source,
-            IObservable<DictionaryModification<TKey, TValue>> changes)
-        {
-            return new ObservableDictionary<TKey, TValue>(source, changes, (key, existing, @new) => @new);
+            return new ObservableDictionary<TKey, TValue>(source, updateFunction, scheduler);
         }
 
         public static IObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(
             this IObservable<DictionaryModification<TKey, TValue>> source,
-            IObservable<DictionaryModification<TKey, TValue>> changes, Func<TKey, TValue, TValue, TValue> updateFunction)
+            IObservable<DictionaryModification<TKey, TValue>> changes,
+            IScheduler scheduler)
         {
-            return new ObservableDictionary<TKey, TValue>(source, changes, updateFunction); // TODO Check correct order.
+            return new ObservableDictionary<TKey, TValue>(source, changes, (key, existing, @new) => @new, scheduler);
+        }
+
+        public static IObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(
+            this IObservable<DictionaryModification<TKey, TValue>> source,
+            IObservable<DictionaryModification<TKey, TValue>> changes, UpdateFunction<TKey, TValue> updateFunction,
+            IScheduler scheduler)
+        {
+            return new ObservableDictionary<TKey, TValue>(source, changes, updateFunction, scheduler);
         }
 
         /// <summary>
@@ -76,9 +78,9 @@ namespace Adaptive.Observables
                     from existingItems in source.TakeWhile(notification => notification.Type != DictionaryNotificationType.Initialised)
                         .Select(dn => new KeyValuePair<TKey, TValue>(dn.Key, dn.Value))
                         .ToList()
-                select existingItems.AsEnumerable());
+                    select existingItems.AsEnumerable());
         }
-        
+
         /// <summary>
         /// Returns a stream of dictionary notifications containing only those notification types included in <paramref name="filter"/>.
         /// </summary>
@@ -87,10 +89,10 @@ namespace Adaptive.Observables
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static IObservable<DictionaryNotification<TKey, TValue>>  Only<TKey, TValue>(
+        public static IObservable<DictionaryNotification<TKey, TValue>> Only<TKey, TValue>(
             this IObservable<DictionaryNotification<TKey, TValue>> source, params DictionaryNotificationType[] filter)
         {
             return source.Where(dn => filter.Any(filteredDnt => (dn.Type & filteredDnt) > 0));
-        } 
+        }
     }
 }

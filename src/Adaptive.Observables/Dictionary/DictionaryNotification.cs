@@ -32,6 +32,10 @@ namespace Adaptive.Observables
         /// For a removed notification type, the value that was removed from the dictionary for the key.
         /// </summary>
         public TValue RemovedValue { get; internal set; }
+        /// <summary>
+        /// For a cleared notification type, the value that was removed when the dictionary was cleared, for the key.
+        /// </summary>
+        public TValue ClearedValue { get; internal set; }
     }
 
     public static class DictionaryNotification
@@ -44,14 +48,23 @@ namespace Adaptive.Observables
             };
         }
 
-        public static DictionaryNotification<TKey, TValue> Cleared<TKey, TValue>()
+        public static DictionaryNotification<TKey, TValue> KeyCleared<TKey, TValue>(TKey key, TValue value)
         {
             return new DictionaryNotification<TKey, TValue>()
             {
-                Type = DictionaryNotificationType.Cleared
+                Type = DictionaryNotificationType.KeyCleared,
+                Key = key,
+                ClearedValue = value
             };
         }
-
+        public static DictionaryNotification<TKey, TValue> DictionaryCleared<TKey, TValue>()
+        {
+            return new DictionaryNotification<TKey, TValue>()
+            {
+                Type = DictionaryNotificationType.DictionaryCleared
+            };
+        }
+        
         public static DictionaryNotification<TKey, TValue> Existing<TKey, TValue>(TKey key, TValue value)
         {
             return new DictionaryNotification<TKey, TValue>
